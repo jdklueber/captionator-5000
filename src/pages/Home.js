@@ -1,6 +1,11 @@
+import Oauth from "../components/oauth/Oauth";
+
 function Home() {
     return (
-        <div>Hello world - Home Page</div>
+        <div>
+            <h1>Hello world - Home Page</h1>
+            <Oauth/>
+        </div>
     );
 }
 
