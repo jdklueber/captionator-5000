@@ -3,6 +3,7 @@ import Header from "./components/frame/Header";
 import Footer from "./components/frame/Footer";
 import ContentArea from "./components/frame/ContentArea";
 import constants, {pages} from "./constants";
+import {ToastContainer} from "react-toastify";
 
 import PictureListPage from "./pages/PictureListPage";
 import IndividualPicture from "./pages/IndividualPicture";
@@ -31,7 +32,18 @@ function App() {
         <Footer/>
     </BrowserRouter>
 
-
+        <ToastContainer //copied and pasted from the configure page
+            position="bottom-center"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="dark"
+        />
     </>
   );
 }
