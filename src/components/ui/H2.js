@@ -1,6 +1,6 @@
 function H2({children}) {
     return (
-        <h2 className={"font-bold text-3xl max-w-fit mx-auto"}>{children}</h2>
+        <h2 className={"font-bold text-3xl max-w-fit mx-auto mb-4"}>{children}</h2>
     );
 }
 

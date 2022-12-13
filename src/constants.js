@@ -11,4 +11,15 @@ const constants = {
     }
 };
 
+const pages = {
+    HOME: "/",
+    UPLOAD: "/upload",
+    PICTURE: "/picture",
+    PROFILE: "/profile",
+    SIGN_UP: "/sign-up",
+    SIGN_IN: "/sign-in",
+    FORGOT_PASSWORD: "/forgot-password"
+}
+
 export default constants;
+export {pages};

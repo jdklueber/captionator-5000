@@ -8,7 +8,7 @@ function Button({label, onClick, style, className}) {
         style_classes = "bg-blue-600 text-white border-blue-900 hover:bg-blue-800";
     }
 
-    const general_classes = "rounded drop-shadow-xl px-2 w-full border-2 my-2";
+    const general_classes = "rounded drop-shadow-xl px-2 w-full border-2 my-2 cursor-pointer";
 
     const classes = style_classes + " " + general_classes
                                   + " " + className;
