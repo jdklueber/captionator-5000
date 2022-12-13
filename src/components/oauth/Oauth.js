@@ -3,6 +3,7 @@ import constants from "../../constants";
 import SignIn from "./SignIn";
 import SignUp from "./SignUp";
 import ForgotPassword from "./ForgotPassword";
+import Frame from "../ui/Frame";
 
 function Oauth() {
     const [mode, setMode] = useState(constants.oauth.SIGN_IN);
@@ -14,9 +15,9 @@ function Oauth() {
 
 
     return (
-        <div className={"w-full border-2 rounded-lg border-gray-300 mx-auto my-5 md:m-10"}>
+        <Frame>
             {content}
-        </div>
+        </Frame>
     );
 }
 

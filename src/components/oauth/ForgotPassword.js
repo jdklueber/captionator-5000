@@ -1,11 +1,12 @@
 import StyledInput from "../ui/StyledInput";
 import Button from "../ui/Button";
 import constants from "../../constants";
+import H2 from "../ui/H2";
 
 function ForgotPassword({modeChangeHook}) {
     return (
         <div className={"py-10"}>
-            <h2 className={"font-bold text-3xl max-w-fit mx-auto"}>Forgot Password</h2>
+            <H2>Forgot Password</H2>
 
             <div className={"mx-auto w-full my-5 px-5 md:px-10"}>
                 <StyledInput type={"text"} placeholder={"Email"}/>
