@@ -6,6 +6,8 @@ function Button({label, onClick, style, className}) {
         style_classes = "bg-red-600 text-white border-red-900 hover:bg-red-800";
     } else if (style === constants.buttons.BLUE) {
         style_classes = "bg-blue-600 text-white border-blue-900 hover:bg-blue-800";
+    } else if (style === constants.buttons.PLAIN) {
+        style_classes = "bg-white text-black border-slate-400 hover:bg-slate-100";
     }
 
     const general_classes = "rounded drop-shadow-xl px-2 w-full border-2 my-2 cursor-pointer";

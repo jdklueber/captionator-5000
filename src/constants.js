@@ -7,7 +7,8 @@ const constants = {
     buttons: {
         GREEN: "green",
         RED: "red",
-        BLUE: "blue"
+        BLUE: "blue",
+        PLAIN: "plain"
     }
 };
 

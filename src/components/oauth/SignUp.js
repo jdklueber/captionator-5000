@@ -1,15 +1,12 @@
 import StyledInput from "../ui/StyledInput";
 import Button from "../ui/Button";
 import HorizontalRule from "../ui/HorizontalRule";
-import constants, {pages} from "../../constants";
+import constants from "../../constants";
 import H2 from "../ui/H2";
-import {createUserWithEmailAndPassword, updateProfile,
-    GoogleAuthProvider, signInWithPopup} from "firebase/auth";
-import {doc, setDoc, serverTimestamp, getDoc} from "firebase/firestore";
-import {db, auth} from "../../firebase/firebase";
 import {useState} from "react";
-import {toast} from "react-toastify";
 import {useNavigate} from "react-router-dom";
+import {signUp, signUpWithGoogle} from "./firebaseFunctions";
+import {getAuth} from "firebase/auth";
 
 function SignUp({modeChangeHook}) {
     const [signupData, setSignupData] = useState(
@@ -26,50 +23,7 @@ function SignUp({modeChangeHook}) {
         setSignupData(newData);
     }
 
-    const signUp = async () => {
-        try {
-            await createUserWithEmailAndPassword(auth, signupData.email, signupData.password);
-            updateProfile(auth.currentUser, {displayName: signupData.displayName});
-            toast.success("Account created!");
-            navigate(pages.HOME);
-        } catch (error) {
-            toast.error(error.message);
-        }
-    }
 
-    const signUpWithGoogle = async () => {
-
-        try {
-            //Set up our firebase interface
-            const provider = new GoogleAuthProvider();
-
-            //Perform the sign up/sign in step
-            const result = await signInWithPopup(auth, provider);
-            const user = result.user;
-
-            //Build the user profile record (optional)
-            const docRef = doc(db, "users", user.uid)
-            const docSnap = await getDoc(docRef);
-
-            if (!docSnap.exists()) { //We don't have a user profile for this person
-                //Build the user profile data
-                const dbProfileData = {
-                    email: user.email,
-                    displayName: auth.currentUser.displayName
-                };
-                dbProfileData.timestamp = serverTimestamp();
-                await setDoc(docRef, dbProfileData);
-
-                //Let them know the account was created successfully
-                toast.success("Account created!");
-            }
-            //Whether or not we created a profile, they're signed in
-            //Navigate back to the home page
-            navigate(pages.HOME);
-        } catch (error) {
-            toast.error(error.message);
-        }
-    }
 
     return (
         <div className={"py-10"}>
@@ -92,9 +46,10 @@ function SignUp({modeChangeHook}) {
                              onChange={(evt) => updateField("passwordConfirm", evt.currentTarget.value)}
                              value={signupData.passwordConfirm}
                 />
-                <Button label={"Sign up!"} onClick={signUp}/>
+                <Button label={"Sign up!"} onClick={() => signUp(getAuth(), navigate, signupData)}/>
                 <HorizontalRule/>
-                <Button label={"Continue with Google"} style={constants.buttons.RED} onClick={signUpWithGoogle}/>
+                <Button label={"Continue with Google"} style={constants.buttons.RED}
+                        onClick={() => signUpWithGoogle(getAuth(), navigate)}/>
                 <div className={"mt-5 text-red-500"} onClick={() => modeChangeHook(constants.oauth.SIGN_IN)}>
                     Back to sign in
                 </div>
