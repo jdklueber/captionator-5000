@@ -1,24 +1,14 @@
 import {auth} from "../../firebase/firebase";
-import {useEffect, useState} from "react";
-import {onAuthStateChanged} from 'firebase/auth'
+import {useContext} from "react";
 import Button from "../ui/Button";
 import {useNavigate} from "react-router-dom";
 import constants, {pages} from "../../constants";
+import {AuthContext} from "../../context/AuthContext";
 
 function AuthStatusWidget({isMobile}) {
-    const [user, setUser] = useState(null);
+    const authContext = useContext(AuthContext);
 
-    useEffect(()=> {
-        onAuthStateChanged(auth, (userObj) => {
-            if (userObj) {
-                setUser(userObj);
-            } else {
-                setUser(null);
-            }
-        });
-    }, [])
-
-    const output = user ? <SignedIn user={user}/> : <SignedOut/>
+    const output = authContext.user ? <SignedIn user={authContext.user}/> : <SignedOut/>
 
     let displayClasses = "hidden md:block"
     if (isMobile) {

@@ -4,7 +4,6 @@ import StyledInput from "../components/ui/StyledInput";
 import Button from "../components/ui/Button";
 import Frame from "../components/ui/Frame";
 import ReadOnlyField from "../components/ui/ReadOnlyField";
-
 function Profile() {
     const [editMode, setEditMode] = useState(true);
     const [displayName, setDisplayName] = useState("Dummy Name");

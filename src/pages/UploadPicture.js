@@ -1,16 +1,34 @@
 import H2 from "../components/ui/H2";
 import Frame from "../components/ui/Frame";
-import StyledInput from "../components/ui/StyledInput";
 import Button from "../components/ui/Button";
 import constants from "../constants";
+import FileChooser from "../components/ui/FileChooser";
+import {useState} from "react";
+import {storage} from "../firebase/firebase";
+import {ref, uploadBytes} from "firebase/storage"
+import {toast} from "react-toastify";
 
 function UploadPicture() {
+    const [file, setFile] = useState();
+
+    const changeHandler = (fileData) => {
+        setFile(fileData);
+    }
+
+    const handleUpload = () => {
+        if (file != null) {
+            const storageRef = ref(storage, 'images/testfile.png');
+            uploadBytes(storageRef, file).then(() => {
+                toast.success("File uploaded!!")
+            });
+        }
+    }
+
     return (
         <Frame>
             <H2>Upload A Picture</H2>
-            <StyledInput type="file" className={"file:border-green-900 file:p-2 file:rounded-2xl file:bg-slate-100" +
-                " file:drop-shadow-2xl file:mr-5 mb-10"}/>
-            <Button label={"Save"} style={constants.buttons.GREEN}/>
+            <FileChooser label={"Select File"} fileHandlerCallback={changeHandler}/>
+            <Button label={"Save"} style={constants.buttons.GREEN} onClick={handleUpload}/>
         </Frame>
     );
 }
