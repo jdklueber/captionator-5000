@@ -1,21 +1,27 @@
 import Frame from "../components/ui/Frame";
 import H2 from "../components/ui/H2";
-import sampleImage from "../samples/angel.jpg";
-import sampleImage2 from "../samples/ride.jpg";
 import Picture from "../components/Picture";
+import {useContext, useEffect, useState} from "react";
+import {DataContext} from "../context/Data";
 
 function PictureListPage() {
+    const data = useContext(DataContext);
+    const [images, setImages] = useState([]);
+
+    useEffect( () => {
+        const loadImageMetadata = async () => {
+            const metadata = await data.getAllImageMetadata();
+            setImages(metadata);
+        }
+
+        loadImageMetadata();
+    }, [data]);
 
     return (
         <Frame>
             <H2>Captionator 5000</H2>
             <div className={"md:flex md:flex-row md:flex-wrap md:gap-5"}>
-                    <Picture imagePath={sampleImage} displayName={"User McDisplayName"} thumbnail/>
-                    <Picture imagePath={sampleImage2} displayName={"User McDisplayName"} thumbnail/>
-                    <Picture imagePath={sampleImage} displayName={"User McDisplayName"} thumbnail/>
-                    <Picture imagePath={sampleImage2} displayName={"User McDisplayName"} thumbnail/>
-                    <Picture imagePath={sampleImage} displayName={"User McDisplayName"} thumbnail/>
-                    <Picture imagePath={sampleImage2} displayName={"User McDisplayName"} thumbnail/>
+                {images.map(i => <Picture key={i.id} imagePath={i.url} displayName={i.uploadedBy} thumbnail/>)}
             </div>
         </Frame>
     );

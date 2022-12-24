@@ -9,6 +9,9 @@ const constants = {
         RED: "red",
         BLUE: "blue",
         PLAIN: "plain"
+    },
+    storage_paths: {
+        IMAGES: "images/"
     }
 };
 

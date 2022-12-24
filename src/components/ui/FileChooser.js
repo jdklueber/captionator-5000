@@ -1,14 +1,10 @@
-import {useState} from "react";
-
-function FileChooser({label, fileHandlerCallback}) {
-    const [value, setValue] = useState();
+function FileChooser({label, value, fileHandlerCallback}) {
     const changeHandler = (evt) => {
         if (evt.currentTarget.files.length > 0) {
             fileHandlerCallback(evt.currentTarget.files[0])
         } else {
             fileHandlerCallback(null);
         }
-        setValue(evt.currentTarget.value)
     }
 
     return (

@@ -1,7 +1,7 @@
 // pictures collection
 // eslint-disable-next-line no-unused-vars
 const picture = {
-    pictureId: "",
+    image: "",
     userId: "",
     alt: "",
     timestamp: ""
