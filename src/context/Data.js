@@ -1,6 +1,6 @@
 import React from "react";
 import {db, storage} from "../firebase/firebase";
-import {collection, addDoc, serverTimestamp, query, orderBy, getDocs} from "firebase/firestore";
+import {collection, doc, addDoc, serverTimestamp, query, orderBy, getDocs, getDoc} from "firebase/firestore";
 import constants from "../constants";
 import {v4 as uuidv4} from "uuid";
 import {ref, uploadBytes, getDownloadURL} from "firebase/storage";
@@ -53,15 +53,27 @@ function DataProvider({children}) {
         const querySnapshot = await getDocs(q);
         const result = [];
         querySnapshot.forEach((doc) => {
-            result.push(doc.data());
+            const m = doc.data();
+            m.id = doc.id;
+            result.push(m);
         })
 
         return result;
     }
 
+    const getImageMetadata = async (id) => {
+        const docsnap = await getDoc(doc(db, collections.images, id));
+        if (docsnap.exists()) {
+            return docsnap.data();
+        } else {
+            return null;
+        }
+    }
+
     const dataObj = {
         saveImage,
-        getAllImageMetadata
+        getAllImageMetadata,
+        getImageMetadata
     }
 
     return (

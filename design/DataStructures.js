@@ -1,10 +1,13 @@
+/* eslint-disable */ // This is a scratch file that will never be executed
 // pictures collection
-// eslint-disable-next-line no-unused-vars
+
 const picture = {
-    image: "",
-    userId: "",
-    alt: "",
-    timestamp: ""
+    image: "filename",
+    url: "url",
+    userId: "user.uid",
+    uploadedBy: "user.displayName",
+    alt: "User generated photo",
+    timestamp: "serverTimestamp()"
 };
 
 // Queries

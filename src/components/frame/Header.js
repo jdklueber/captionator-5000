@@ -9,7 +9,6 @@ const navigation = [
     { name: 'Home', to: pages.HOME},
     { name: 'Upload', to: pages.UPLOAD},
     { name: 'Profile', to: pages.PROFILE},
-    { name: 'Picture', to: pages.PICTURE},
 ]
 
 const baseClasses = "ml-5 "
