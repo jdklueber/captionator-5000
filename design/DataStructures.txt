@@ -1,5 +1,8 @@
-/* eslint-disable */ // This is a scratch file that will never be executed
+/* eslint-disable */
+
 // pictures collection
+
+import {serverTimestamp} from "firebase/firestore";
 
 const picture = {
     image: "filename",
@@ -27,7 +30,8 @@ const caption = {
     pictureId: "",
     userId: "",
     caption: "",
-    votes: []
+    votes: [],
+    timestamp: "serverTimestamp()"
 }
 
 // eslint-disable-next-line no-unused-vars
