@@ -1,6 +1,6 @@
 import React from "react";
 import {db, storage} from "../firebase/firebase";
-import {collection, doc, addDoc, serverTimestamp, query, orderBy, getDocs, getDoc} from "firebase/firestore";
+import {collection, doc, addDoc, serverTimestamp, query, orderBy, getDocs, getDoc, setDoc, where} from "firebase/firestore";
 import constants from "../constants";
 import {v4 as uuidv4} from "uuid";
 import {ref, uploadBytes, getDownloadURL} from "firebase/storage";
@@ -10,7 +10,8 @@ const DataContext = React.createContext();
 const collections = {
     images: "images",
     users: "users",
-    admins: "admins"
+    admins: "admins",
+    captions: "captions"
 
 }
 async function buildMetadata(filename, user, ref) {
@@ -64,16 +65,47 @@ function DataProvider({children}) {
     const getImageMetadata = async (id) => {
         const docsnap = await getDoc(doc(db, collections.images, id));
         if (docsnap.exists()) {
-            return docsnap.data();
+            return {...docsnap.data(), id: id}
         } else {
             return null;
         }
     }
 
+    const saveCaption = async (captionData) => {
+        if (captionData && captionData.id) {
+            //Update Mode
+            const docRef = doc(db, collections.captions, captionData.id);
+            setDoc(docRef, captionData);
+        } else {
+            //Insert Mode
+            captionData.timestamp = serverTimestamp();
+            await addDoc(collection(db, collections.captions), captionData);
+        }
+    }
+
+    const getCaptionsForPicture = async (pictureId) => {
+        const q = query(collection(db, collections.captions), where("pictureId", "==", pictureId)
+            , orderBy("timestamp", "desc")
+        );
+
+        const querySnapshot = await getDocs(q);
+        const result = [];
+        querySnapshot.forEach((doc) => {
+            const m = doc.data();
+            m.id = doc.id;
+            result.push(m);
+        })
+
+        return result;
+
+    }
+
     const dataObj = {
         saveImage,
         getAllImageMetadata,
-        getImageMetadata
+        getImageMetadata,
+        saveCaption,
+        getCaptionsForPicture
     }
 
     return (
