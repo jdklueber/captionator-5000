@@ -12,11 +12,28 @@ import {doc, getDoc, serverTimestamp, setDoc} from "firebase/firestore";
 const signUp = async (auth, navigate, signupData) => {
     try {
         await createUserWithEmailAndPassword(auth, signupData.email, signupData.password);
-        updateProfile(auth.currentUser, {displayName: signupData.displayName});
-        toast.success("Account created!");
+        await updateProfile(auth.currentUser, {displayName: signupData.displayName});
+        await buildUserProfile(auth, auth.currentUser, signupData.displayName);
         navigate(pages.HOME);
     } catch (error) {
         toast.error(error.message);
+    }
+}
+
+const buildUserProfile = async (auth, user, displayName) => {
+    //Build the user profile record (optional)
+    const docRef = doc(db, "users", user.uid)
+    const docSnap = await getDoc(docRef);
+
+    if (!docSnap.exists()) { //We don't have a user profile for this person
+        //Build the user profile data
+        const dbProfileData = {
+            email: user.email,
+            displayName: displayName
+        };
+        dbProfileData.timestamp = serverTimestamp();
+        await setDoc(docRef, dbProfileData);
+        toast.success("Account created!");
     }
 }
 
@@ -30,22 +47,8 @@ const signUpWithGoogle = async (auth, navigate) => {
         const result = await signInWithPopup(auth, provider);
         const user = result.user;
 
-        //Build the user profile record (optional)
-        const docRef = doc(db, "users", user.uid)
-        const docSnap = await getDoc(docRef);
+        buildUserProfile(auth, user);
 
-        if (!docSnap.exists()) { //We don't have a user profile for this person
-            //Build the user profile data
-            const dbProfileData = {
-                email: user.email,
-                displayName: auth.currentUser.displayName
-            };
-            dbProfileData.timestamp = serverTimestamp();
-            await setDoc(docRef, dbProfileData);
-
-            //Let them know the account was created successfully
-            toast.success("Account created!");
-        }
         //Whether or not we created a profile, they're signed in
         //Navigate back to the home page
         navigate(pages.HOME);

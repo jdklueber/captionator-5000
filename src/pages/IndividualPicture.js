@@ -34,15 +34,15 @@ function IndividualPicture() {
         ? <CaptionEditor pictureId={metadata.id} userId={auth.user.uid}/>
         : ""
 
-    const caps = auth && auth.user && captions
-        ? captions.map(c => <Caption caption={c}/> )
+    const caps = captions
+        ? captions.map(c => <Caption caption={c} user={auth.user}/> )
         : "";
 
     return (
         <Frame>
             {metadata ? <Picture imagePath={metadata.url} displayName={metadata.uploadedBy} alt={metadata.alt}/> : ""}
             <HorizontalRule/>
-            {captionEditor}
+            {auth.user ? captionEditor : ""}
             {caps}
             {/*<Caption caption={"This is a caption"} score={10}/>*/}
             {/*<Caption caption={"This one sucked"} score={-100}/>*/}

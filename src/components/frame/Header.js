@@ -4,17 +4,44 @@ import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import {pages} from "../../constants";
 import {NavLink} from "react-router-dom";
 import AuthStatusWidget from "../oauth/AuthStatusWidget";
+import {useContext} from "react";
+import {AuthContext} from "../../context/AuthContext";
 
 const navigation = [
     { name: 'Home', to: pages.HOME},
     { name: 'Upload', to: pages.UPLOAD},
-    { name: 'Profile', to: pages.PROFILE},
+    // { name: 'Profile', to: pages.PROFILE},
 ]
 
 const baseClasses = "ml-5 "
 const activeClassName = baseClasses + " text-red-800 border-b-2 border-red-800"
 
 function Header() {
+    const auth = useContext(AuthContext);
+    const mobileNav = <div className="mt-3 space-y-1">
+        {navigation.map((item) => (
+            <Disclosure.Button
+                key={item.name}
+                as="a"
+                href={item.to}
+                className="block px-4 py-2 text-base font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-800"
+            >
+                {item.name}
+            </Disclosure.Button>
+        ))}
+    </div>
+    const desktopNav = <ul className={"ml-5 hidden sm:inline"}>
+        { navigation.map(e => <NavLink
+            key={e.name}
+            element={"li"} to={e.to}
+            className={({ isActive }) =>
+                isActive ? activeClassName : baseClasses
+            }
+        >
+            {e.name}
+        </NavLink>)}
+    </ul>;
+
     return (
         <>
             <div className="min-h-full">
@@ -33,17 +60,7 @@ function Header() {
                                             <span className={"text-sm md:text-lg ml-5"}>
                                                 Captionator 5000
                                             </span>
-                                            <ul className={"ml-5 hidden sm:inline"}>
-                                                { navigation.map(e => <NavLink
-                                                                        key={e.name}
-                                                                        element={"li"} to={e.to}
-                                                                        className={({ isActive }) =>
-                                                                            isActive ? activeClassName : baseClasses
-                                                                        }
-                                                                      >
-                                                    {e.name}
-                                                </NavLink>)}
-                                            </ul>
+                                            {auth.user ? desktopNav : ""}
                                         </div>
                                     </div>
                                     <AuthStatusWidget/>
@@ -67,18 +84,7 @@ function Header() {
                                     <div className="flex items-center px-4">
                                         <AuthStatusWidget isMobile={true}/>
                                     </div>
-                                    <div className="mt-3 space-y-1">
-                                        {navigation.map((item) => (
-                                            <Disclosure.Button
-                                                key={item.name}
-                                                as="a"
-                                                href={item.to}
-                                                className="block px-4 py-2 text-base font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-800"
-                                            >
-                                                {item.name}
-                                            </Disclosure.Button>
-                                        ))}
-                                    </div>
+                                    {auth.user ? mobileNav : ""}
                                 </div>
                             </Disclosure.Panel>
                         </>
