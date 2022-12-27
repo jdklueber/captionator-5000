@@ -2,13 +2,20 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Listings
-    match /pictures/{picture} {
+    match /images/{picture} {
     	allow read;
-      allow create: if request.auth != null && request.resource.data.imgUrls.size() < 7;
-    	allow delete: if resource.data.userRef == request.auth.uid;
-      allow update: if resource.data.userRef == request.auth.uid;
+      allow create: if request.auth != null;
+    	allow delete: if resource.data.userId == request.auth.uid;
+      allow update: if resource.data.userId == request.auth.uid;
     }
+
+    match /captions/{picture} {
+    	allow read;
+      allow create: if request.auth != null;
+    	allow delete: if resource.data.userId == request.auth.uid;
+      allow update: if resource.data.userId == request.auth.uid;
+    }
+
    
     // Users
     match /users/{user} {
