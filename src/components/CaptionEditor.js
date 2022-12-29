@@ -30,15 +30,14 @@ function CaptionEditor({initialCaption, pictureId, userId}) {
     }
 
     const saveCaption =  async () => {
-        const captionData = captionBuffer;
-        if (captionData && captionData.id) {
+        if (captionBuffer && captionBuffer.id) {
             //Update Mode
-            const docRef = doc(db, collections.captions, captionData.id);
-            setDoc(docRef, captionData);
+            const docRef = doc(db, collections.captions, captionBuffer.id);
+            setDoc(docRef, captionBuffer);
         } else {
             //Insert Mode
-            captionData.timestamp = serverTimestamp();
-            await addDoc(collection(db, collections.captions), captionData);
+            captionBuffer.timestamp = serverTimestamp();
+            await addDoc(collection(db, collections.captions), captionBuffer);
         }
         setCaptionBuffer(buildNewCaptionObject(pictureId, userId, ""))
     }

@@ -2,7 +2,7 @@ import Frame from "../components/ui/Frame";
 import H2 from "../components/ui/H2";
 import Picture from "../components/Picture";
 import {useEffect, useState} from "react";
-import {collection, getDocs, orderBy, query} from "firebase/firestore";
+import {collection, orderBy, query, onSnapshot} from "firebase/firestore";
 import {db} from "../firebase/firebase";
 import {collections} from "../constants";
 
@@ -10,29 +10,23 @@ function PictureListPage() {
     const [images, setImages] = useState([]);
 
     useEffect( () => {
-        const loadImageMetadata = async () => {
-            const metadata = await getAllImageMetadata();
-            setImages(metadata);
-        }
-
-        loadImageMetadata();
-    }, []);
-
-    const getAllImageMetadata = async () => {
         const q = query(collection(db, collections.images)
             , orderBy("timestamp", "desc")
         );
 
-        const querySnapshot = await getDocs(q);
-        const result = [];
-        querySnapshot.forEach((doc) => {
-            const m = doc.data();
-            m.id = doc.id;
-            result.push(m);
-        })
+        return onSnapshot(q, (snapshot) => {
+            const newData = snapshot.docs.map((snap) => {
+                    const doc = snap.data();
+                    doc.id = snap.id;
+                    return doc;
+                }
+            )
+            setImages(newData);
+        });
 
-        return result;
-    }
+    }, [images]);
+
+
 
     return (
         <Frame>

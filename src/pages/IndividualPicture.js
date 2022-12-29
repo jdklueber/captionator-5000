@@ -10,7 +10,7 @@ import {
     collection,
     doc,
     getDoc,
-    getDocs,
+    onSnapshot,
     orderBy,
     query,
     setDoc,
@@ -19,6 +19,19 @@ import {
 import {db} from "../firebase/firebase";
 import {collections} from "../constants";
 
+function scoreCaption(caption) {
+    return caption && caption.upvotes && caption.downvotes ?
+        caption.upvotes.length - caption.downvotes.length
+        : 0;
+}
+function captionSortFn(a,b) {
+    const aScore = scoreCaption(a);
+    const bScore = scoreCaption(b);
+    if (aScore > bScore) return 1;
+    if (aScore < bScore) return -1;
+    return 0;
+}
+
 function IndividualPicture() {
     const parms = useParams();
     const auth = useContext(AuthContext);
@@ -26,45 +39,37 @@ function IndividualPicture() {
     const [captions, setCaptions] = useState();
 
     useEffect(() => {
+        const id = parms.id;
         const loadPicture = async () => {
-            const metadata = await getImageMetadata(parms.id)
-            setMetadata(metadata);
+            const docsnap = await getDoc(doc(db, collections.images, id));
+            if (docsnap.exists()) {
+                setMetadata({...docsnap.data(), id: id});
+            } else {
+                return null;
+            }
         }
-
-        const loadCaptions = async () => {
-            const captions = await getCaptionsForPicture(parms.id)
-            setCaptions(captions)
-        }
-
         loadPicture();
-        loadCaptions();
-    }, [parms]);
+    });
 
-    const getImageMetadata = async (id) => {
-        const docsnap = await getDoc(doc(db, collections.images, id));
-        if (docsnap.exists()) {
-            return {...docsnap.data(), id: id}
-        } else {
-            return null;
-        }
-    }
-
-    const getCaptionsForPicture = async (pictureId) => {
-        const q = query(collection(db, collections.captions), where("pictureId", "==", pictureId)
+    useEffect(() => {
+        const id = parms.id;
+        const q = query(collection(db, collections.captions), where("pictureId", "==", id)
             , orderBy("timestamp", "desc")
         );
 
-        const querySnapshot = await getDocs(q);
-        const result = [];
-        querySnapshot.forEach((doc) => {
-            const m = doc.data();
-            m.id = doc.id;
-            result.push(m);
-        })
+        return onSnapshot(q, (snapshot) => {
+            const newData = snapshot.docs.map((snap) => {
+                    const doc = snap.data();
+                    doc.id = snap.id;
+                    return doc;
+                }
+            )
+            newData.sort(captionSortFn).reverse();
+            setCaptions(newData);
+        });
+    }, [parms]);
 
-        return result;
 
-    }
 
     const updateCaption = (caption) => {
         const newData = [...captions];
@@ -90,10 +95,12 @@ function IndividualPicture() {
 
     return (
         <Frame>
-            {metadata ? <Picture imagePath={metadata.url} displayName={metadata.uploadedBy} alt={metadata.alt}/> : ""}
-            <HorizontalRule/>
-            {auth.user ? captionEditor : ""}
-            {caps}
+            <div className={"transition-all duration-200 ease-in-out"}>
+                {metadata ? <Picture imagePath={metadata.url} displayName={metadata.uploadedBy} alt={metadata.alt}/> : ""}
+                <HorizontalRule/>
+                {auth.user ? captionEditor : ""}
+                {caps}
+            </div>
         </Frame>
     );
 }
