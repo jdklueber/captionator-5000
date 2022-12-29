@@ -1,7 +1,7 @@
 import {useNavigate} from "react-router-dom";
 import {pages} from "../constants";
 
-const fullSize = "w-fit";
+const fullSize = "max-h-96";
 const thumbnailSize = "w-fit md:max-w-xs"
 function Picture({imagePath, displayName, thumbnail, alt, pictureId}) {
     const size = thumbnail ? thumbnailSize : fullSize;

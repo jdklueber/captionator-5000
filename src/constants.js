@@ -25,5 +25,12 @@ const pages = {
     FORGOT_PASSWORD: "/forgot-password"
 }
 
+const collections = {
+    images: "images",
+    users: "users",
+    admins: "admins",
+    captions: "captions"
+
+}
 export default constants;
-export {pages};
+export {pages, collections};

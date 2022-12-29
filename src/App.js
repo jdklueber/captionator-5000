@@ -11,12 +11,10 @@ import Profile from "./pages/Profile";
 import UploadPicture from "./pages/UploadPicture";
 import Oauth from "./components/oauth/Oauth";
 import AuthProvider from "./context/AuthContext";
-import DataProvider from "./context/Data";
 function App() {
   return (
     <>
         <AuthProvider>
-            <DataProvider>
                 <BrowserRouter>
                     <Header/>
                     <ContentArea>
@@ -48,7 +46,6 @@ function App() {
                     pauseOnHover
                     theme="dark"
                 />
-            </DataProvider>
         </AuthProvider>
     </>
   );
