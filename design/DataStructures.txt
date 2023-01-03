@@ -53,3 +53,7 @@ const vote = {
 // query(collection(db, "captions"), where("userId", "==", userId), orderBy("timestamp", "desc"), limit(100));  //Initial query
 // query(collection(db, "captions"), where("userId", "==", userId), orderBy("timestamp", "desc"), limit(100), startAfter(last_caption_document));
 
+// Admin record ID == user record ID
+// const admin = {
+    admin: true/false
+}

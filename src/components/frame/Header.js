@@ -8,8 +8,9 @@ import {useContext} from "react";
 import {AuthContext} from "../../context/AuthContext";
 
 const navigation = [
-    { name: 'Home', to: pages.HOME},
-    { name: 'Upload', to: pages.UPLOAD},
+    { name: 'Home', to: pages.HOME, public: true},
+    { name: 'Upload', to: pages.UPLOAD, public: true},
+    { name: 'Admin', to: pages.ADMIN, public: false}
     // { name: 'Profile', to: pages.PROFILE},
 ]
 
@@ -18,8 +19,12 @@ const activeClassName = baseClasses + " text-red-800 border-b-2 border-red-800"
 
 function Header() {
     const auth = useContext(AuthContext);
+    const getAvailableNav = () => {
+        return navigation.filter(e => e.public || auth.isAdmin);
+    }
+
     const mobileNav = <div className="mt-3 space-y-1">
-        {navigation.map((item) => (
+        {getAvailableNav().map((item) => (
             <Disclosure.Button
                 key={item.name}
                 as="a"
@@ -31,7 +36,7 @@ function Header() {
         ))}
     </div>
     const desktopNav = <ul className={"ml-5 hidden sm:inline"}>
-        { navigation.map(e => <NavLink
+        { getAvailableNav().map(e => <NavLink
             key={e.name}
             element={"li"} to={e.to}
             className={({ isActive }) =>

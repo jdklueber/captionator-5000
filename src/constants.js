@@ -22,7 +22,8 @@ const pages = {
     PROFILE: "/profile",
     SIGN_UP: "/sign-up",
     SIGN_IN: "/sign-in",
-    FORGOT_PASSWORD: "/forgot-password"
+    FORGOT_PASSWORD: "/forgot-password",
+    ADMIN: "/admin"
 }
 
 const collections = {

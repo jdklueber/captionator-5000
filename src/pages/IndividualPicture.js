@@ -49,7 +49,7 @@ function IndividualPicture() {
             }
         }
         loadPicture();
-    });
+    }, [parms]);
 
     useEffect(() => {
         const id = parms.id;

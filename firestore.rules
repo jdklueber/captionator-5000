@@ -16,7 +16,15 @@ service cloud.firestore {
       allow update: if resource.data.userId == request.auth.uid;
     }
 
-   
+    match /admins/{admin} {
+        	allow read;
+          //I can always manage admins
+          allow create, delete, update: if request.auth != null && request.auth.uid == "N6Xll0QwzeUa20JLFB9Q9eVBJ7d2";
+          //Admins can manage admins
+        	allow create, delete, update: if resource.data.userId == request.auth.uid
+          	&& get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.admin == true;
+        }
+
     // Users
     match /users/{user} {
     	allow read;

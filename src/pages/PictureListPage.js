@@ -24,7 +24,7 @@ function PictureListPage() {
             setImages(newData);
         });
 
-    }, [images]);
+    }, []);
 
 
 

@@ -11,6 +11,7 @@ import Profile from "./pages/Profile";
 import UploadPicture from "./pages/UploadPicture";
 import Oauth from "./components/oauth/Oauth";
 import AuthProvider from "./context/AuthContext";
+import AdminPage from "./pages/AdminPage";
 function App() {
   return (
     <>
@@ -29,6 +30,8 @@ function App() {
                                          element={<Oauth initial_mode={constants.oauth.SIGN_UP}/>}/>
                                   <Route path={pages.FORGOT_PASSWORD}
                                          element={<Oauth initial_mode={constants.oauth.FORGOT_PASSWORD}/>}/>
+                                  <Route path={pages.ADMIN}
+                                         element={<AdminPage/>}/>
                               </Routes>
                     </ContentArea>
                     <Footer/>
