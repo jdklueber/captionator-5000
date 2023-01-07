@@ -96,7 +96,7 @@ function IndividualPicture() {
     return (
         <Frame>
             <div className={"transition-all duration-200 ease-in-out"}>
-                {metadata ? <Picture imagePath={metadata.url} displayName={metadata.uploadedBy} alt={metadata.alt}/> : ""}
+                {metadata ? <Picture metadata={metadata} imagePath={metadata.url} displayName={metadata.uploadedBy} alt={metadata.alt}/> : ""}
                 <HorizontalRule/>
                 {auth.user ? captionEditor : ""}
                 {caps}

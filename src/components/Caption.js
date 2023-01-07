@@ -2,7 +2,11 @@ import SolidThumbsUp from "@heroicons/react/24/solid/esm/HandThumbUpIcon";
 import SolidThumbsDown from "@heroicons/react/24/solid/esm/HandThumbDownIcon";
 import OutlineThumbsUp from "@heroicons/react/24/outline/esm/HandThumbUpIcon";
 import OutlineThumbsDown from "@heroicons/react/24/outline/esm/HandThumbDownIcon";
+import {useContext} from "react";
+import {AuthContext} from "../context/AuthContext";
+import DeleteCaption from "./DeleteCaption";
 function Caption({caption, user, updateCaption}) {
+    const authContext = useContext(AuthContext);
 
     const upvote = () => {
         const newCaption = {...caption};
@@ -79,14 +83,19 @@ function Caption({caption, user, updateCaption}) {
 
     return (
         <div className={"my-2 flex flex-row justify-between"}>
-            <span className={"mr-5 text-xl"}>{caption.caption}</span>
-
+            <span className={"mr-5 text-xl"}>
+                {authContext.isAdmin || authContext.user.uid === caption.userId ?
+                    <span className={"mr-5 cursor-pointer"}><DeleteCaption caption={caption}/></span>
+                    : ""}
+                {caption.caption}
+            </span>
             <span>
                 <span>
                     <span className={"italic"}>({score})</span>
                 </span>
 
                 {user ? votingActions : ""}
+
             </span>
         </div>
     );

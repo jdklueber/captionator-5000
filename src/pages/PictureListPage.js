@@ -32,7 +32,7 @@ function PictureListPage() {
         <Frame>
             <H2>Captionator 5000</H2>
             <div className={"md:flex md:flex-row md:flex-wrap md:gap-5"}>
-                {images.map(i => <Picture pictureId={i.id} key={i.id} imagePath={i.url} displayName={i.uploadedBy} thumbnail/>)}
+                {images.map(i => <Picture metadata={i} pictureId={i.id} key={i.id} imagePath={i.url} displayName={i.uploadedBy} thumbnail/>)}
             </div>
         </Frame>
     );
