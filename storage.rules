@@ -8,6 +8,7 @@ service firebase.storage {
       request.auth != null &&
       request.resource.size < 20 * 1024 * 1024 && //20MB
       request.resource.contentType.matches('image/.*')
+      allow delete: if request.auth != null && firestore.get(/databases/(default)/documents/permissions/$(request.auth.uid)).data.isAdmin == true;
     }
   }
 }
