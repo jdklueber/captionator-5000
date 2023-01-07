@@ -29,7 +29,7 @@ const pages = {
 const collections = {
     images: "images",
     users: "users",
-    admins: "admins",
+    permissions: "permissions",
     captions: "captions"
 
 }
