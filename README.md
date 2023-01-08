@@ -1,112 +1,65 @@
-# React plus Tailwind Template
-This repository contains an empty "hello world" React application for use as a template repo for spinning up new react applications with Tailwindcss already set up.  To use it:
-1.  Create a new repository with this as a template
-1.  Inside of your terminal, run `npm install`
+# Captionator-5000
 
-The application should be runnable at this point, and contains only the bare bones necessary to display Hello World styled with Tailwindcss.
+**A Firebase reference application**
 
-Here are the steps used to create this template repo:
+This project was developed as a demonstration and reference for the Firebase (v9) cloud platform.  Four aspects of Firebase have been used here: 
 
-### Build a new React application
+* Authentication
+* Firestore Database
+* Storage
+* Hosting
 
-From your usual project directory:
+Additionally, the user interface was built in React and styled using TailwindCSS.
 
-```console
-npx create-react-app <application name>
-```
+## Features
 
-## Remove unnecessary files
+* User sign up via email/password or using their Google account
+* Security privileges:
+  * Anonymous users have read only access to the front page and individual pictures
+  * Signed in users have access to upload pictures, propose captions, and vote on captions
+  * Admin users have access to delete pictures and captions, as well as give/remove admin rights to other users
+* File uploads - limited to signed in users and enforces that files uploaded are images and less than 20MB in size
+* The site is hosted using Firebase
 
-* From `public/`:  Remove all but index.html
-* Inside of `index.html`: Remove all references to `favicon.ico`, `logo.png`, `manifest.json`.  Also consider changing the `title` tag and the `meta` `description` tag.
-* From `src`: Remove all but `App.js`, `index.css`, and `index.js`. 
-* `App.js`:  Replace with the following snippet
+## General Configuration
 
-```javascript
-function App() {
-  return (
-    <div>
-      Hello World
-    </div>
-  );
-}
+ [Configuration File](src\firebase\firebase.js)
 
-export default App;
+There is a misstep here:  In the future, I will use GitHub Secrets to store the `firebaseConfig` object.  Since this is a public github and the app is configured to be locked into the free tier, I'm not worried about it this time. 
 
-```
+## Authentication
 
-* `index.css`:  Delete all content
-* `index.js`:  Delete references to `reportWebVitals`
-* `package.json`:  Change the name of the project if needed, remove reference to `web-vitals` in the dependencies section.
+[UI References](src\components\oauth) 
 
-Run the project to verify you get a Hello World message.
+* AuthStatusWidget.js:  Displays user signed in OR sign in/sign up links
+* firebaseFunctions.js:  Central location for all authentication functions
+* OAuth.js:  Controlling widget for displaying SignIn.js, SignUp.js, or ForgotPassword.js 
 
-## Install Tailwindcss
+[AuthContext](src\context) :  Exposes user login state to the application 
 
-See https://tailwindcss.com/docs/installation/framework-guides for other frameworks.
+## Firestore Database
 
-#### Install tailwind
+The database functionality is spread out over the components that use them.  What I learned in the course of doing this project is that it's best to keep the Firestore calls as close as possible to the state that they update.  With features that are global, putting the functionality into a React Context is a good idea, but for the features in this app, it was cleanest to have them inside the components tracking the state.  Here are the files to look at:
 
-From the console:
+* [IndividualPicture.js](src/pages/IndividualPicture.js)
+  * Query a document on load from inside a `useEffect`, no subscription
+  * Query a set of documents on load from inside a `useEffect` and subscribe to changes
+  * Update a document
+* [PictureListPage.js](src/pages/PictureListPage.js)
+  * Query a set of documents on load from inside a `useEffect` and subscribe to changes
+* [AdminPage.js](src/pages/AdminPage.js)
+  * Query a set of documents on load from inside a `useEffect` and subscribe to changes
+  * Update a document
+  * When combined with the [security rules](firestore.rules), this page enables users marked as admins to delete pictures and comments
+* [UploadPicture.js](src/pages/UploadPicture.js)
+  * Generate a link from Firebase Storage and populate it into a Firestore document for later use in an `img` tag
 
-```console
-npm install -D tailwindcss postcss autoprefixer
-npx tailwindcss init -p
-```
+## Storage
 
-#### Configure tailwind
+Firebase Storage effectively gives you a secured file system in the cloud to work from.  You can see an example of how to use it inside of [UploadPicture.js](src/pages/UploadPicture.js).  
 
-Update `tailwind.config.js`
+The [security rules](security.rules) file shows an example of how to connect the storage security rules with information inside of a Firestore database for application configurable access.
 
-```javascript
-/** @type {import('tailwindcss').Config} */
-module.exports = {
-  content: [
-    "./src/**/*.{js,jsx,ts,tsx}",
-  ],
-  theme: {
-    extend: {},
-  },
-  plugins: [],
-}
-```
+## Hosting
 
-#### Update `index.css`
-
-Add this to `index.css`:
-
-```css
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-```
-
-#### Restart the server and verify that tailwind styling is in place
-
-Update `App.js` to look like this:
-
-```javascript
-function App() {
-  return (
-    <div className="text-4xl">
-      Hello World
-    </div>
-  );
-}
-
-export default App;
-
-```
-
-Your hello world should now be quite large and sans-serif.
-
-## Making a new favicon.ico file: 
-
-See https://favicon.io/favicon-generator/
-
-If you do this, you'll probably want to add the favicon link inside of `index.html`.
-
-```html
-  <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
-```
-
+Firebase Hosting just... works.  However, you can review the [package.json](package.json) file to see the deploy script for this project.
