@@ -23,19 +23,19 @@ Additionally, the user interface was built in React and styled using TailwindCSS
 
 ## General Configuration
 
- [Configuration File](src\firebase\firebase.js)
+ [Configuration File](src/firebase/firebase.js)
 
 There is a misstep here:  In the future, I will use GitHub Secrets to store the `firebaseConfig` object.  Since this is a public github and the app is configured to be locked into the free tier, I'm not worried about it this time. 
 
 ## Authentication
 
-[UI References](src\components\oauth) 
+[UI References](src/components/oauth) 
 
 * AuthStatusWidget.js:  Displays user signed in OR sign in/sign up links
 * firebaseFunctions.js:  Central location for all authentication functions
 * OAuth.js:  Controlling widget for displaying SignIn.js, SignUp.js, or ForgotPassword.js 
 
-[AuthContext](src\context) :  Exposes user login state to the application 
+[AuthContext](src/context) :  Exposes user login state to the application 
 
 ## Firestore Database
 
@@ -58,7 +58,7 @@ The database functionality is spread out over the components that use them.  Wha
 
 Firebase Storage effectively gives you a secured file system in the cloud to work from.  You can see an example of how to use it inside of [UploadPicture.js](src/pages/UploadPicture.js).  
 
-The [security rules](security.rules) file shows an example of how to connect the storage security rules with information inside of a Firestore database for application configurable access.
+The [security rules](storage.rules) file shows an example of how to connect the storage security rules with information inside of a Firestore database for application configurable access.
 
 ## Hosting
 
