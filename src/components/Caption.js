@@ -63,16 +63,21 @@ function Caption({caption, user, updateCaption}) {
         updateCaption(newCaption);
     }
 
-    let upVoteIcon = <OutlineThumbsUp onClick={upvote} className="h-6 w-6 text-blue-500 inline ml-4 cursor-pointer"/>
+    let upVoteIcon = "";
+    let downVoteIcon = "";
+    if (authContext.user !== null) {
+        upVoteIcon = <OutlineThumbsUp onClick={upvote} className="h-6 w-6 text-blue-500 inline ml-4 cursor-pointer"/>
 
-    if (caption.upvotes && caption.upvotes.filter(e => e === user.uid).length > 0) {
-        upVoteIcon = <SolidThumbsUp onClick={unvoteUpvote} className="h-6 w-6 text-blue-500 inline ml-4 cursor-pointer"/>
+        if (caption.upvotes && caption.upvotes.filter(e => e === user.uid).length > 0) {
+            upVoteIcon = <SolidThumbsUp onClick={unvoteUpvote} className="h-6 w-6 text-blue-500 inline ml-4 cursor-pointer"/>
+        }
+
+        downVoteIcon = <OutlineThumbsDown onClick={downvote} className="h-6 w-6 text-blue-500 inline ml-4 cursor-pointer"/>
+        if (caption.downvotes && caption.downvotes.filter(e => e === user.uid).length > 0) {
+            downVoteIcon = <SolidThumbsDown onClick={unvoteDownvote} className="h-6 w-6 text-blue-500 inline ml-4 cursor-pointer"/>
+        }
     }
 
-    let downVoteIcon = <OutlineThumbsDown onClick={downvote} className="h-6 w-6 text-blue-500 inline ml-4 cursor-pointer"/>
-    if (caption.downvotes && caption.downvotes.filter(e => e === user.uid).length > 0) {
-        downVoteIcon = <SolidThumbsDown onClick={unvoteDownvote} className="h-6 w-6 text-blue-500 inline ml-4 cursor-pointer"/>
-    }
 
 
     const votingActions = <span>{downVoteIcon} {upVoteIcon}</span>
@@ -84,7 +89,7 @@ function Caption({caption, user, updateCaption}) {
     return (
         <div className={"my-2 flex flex-row justify-between"}>
             <span className={"mr-5 text-xl"}>
-                {authContext.isAdmin || authContext.user.uid === caption.userId ?
+                {authContext.isAdmin || (authContext.user && authContext.user.uid) === caption.userId ?
                     <span className={"mr-5 cursor-pointer"}><DeleteCaption caption={caption}/></span>
                     : ""}
                 {caption.caption}
